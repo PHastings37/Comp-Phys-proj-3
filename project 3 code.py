@@ -36,9 +36,33 @@ def randssp(p,q):
     
     return r
 
+
+
+
 r = randssp(3,5000)
 
+rand = np.random.uniform(0, 1, size=(3, 5000))
+
+x = np.random.uniform(0, 1, size = 1000)
+np.sort(x)
+y = -np.log(1-x)
+    
+num_bins = 100
 fig = plt.figure()
+n, bins, patches = plt.hist(y, num_bins, facecolor='blue', alpha=0.5)
+plt.show()
+
+xs = np.polyfit(np.log(x), y, deg = 1, cov = False)
+
+
+fig = plt.figure()
+plt.title("randssp")
 ax = fig.add_subplot(111, projection='3d')
 ax.scatter(r[0], r[1], r[2])
+plt.show()
+
+fig = plt.figure()
+plt.title("rand.uniform")
+ax = fig.add_subplot(111, projection='3d')
+ax.scatter(rand[0], rand[1], rand[2])
 plt.show()
