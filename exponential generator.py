@@ -11,14 +11,16 @@ import matplotlib.pyplot as plt
 
 x = np.random.uniform(0, 1, size =5000)
 
-y = -np.log(x)
+lmda = 0.45
+y = np.exp(-x / lmda)
     
 num_bins = 40
 fig = plt.figure()
 n, bins, patches = plt.hist(y, num_bins, facecolor='blue', alpha=0.5)
 plt.show()
 
-fit = np.polyfit(x, np.log(y), deg=1, cov=False)
+fit = np.polyfit(x, np.log(np.abs(y)), deg=1, cov=False)
 plt.figure()
 plt.scatter(x, fit[0] * x + fit[1])
 plt.show()
+print(-1/fit[0])

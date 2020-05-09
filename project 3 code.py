@@ -33,7 +33,6 @@ def randssp(p,q):
         for k in range (0, p):
             x = np.mod(a*x + c, m)
             r[k, l] = x/m
-    
     return r
 
 
@@ -44,8 +43,9 @@ r = randssp(3,5000)
 rand = np.random.uniform(0, 1, size=(3, 5000))
 
 x = np.random.uniform(0, 1, size = 1000)
-np.sort(x)
-y = -np.log(1-x)
+np.sort(x) 
+lmda = 0.45
+y = -lmda * np.log(x/lmda)
     
 num_bins = 100
 fig = plt.figure()

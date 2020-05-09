@@ -13,8 +13,8 @@ from mpl_toolkits.mplot3d import axes3d
 pi = np.pi
 phi = np.random.uniform(0, 2 * pi, size=1000)
 theta = np.random.uniform(0, pi, size=1000)
-#r = np.random.uniform(0, 1, size=1000)
-r=1
+r = np.random.uniform(0, 1, size=1000)
+#r=1
 
 x = r * np.sin( theta) * np.cos( phi )
 y = r * np.sin( theta) * np.sin( phi )

@@ -7,31 +7,33 @@ Created on Fri May  8 18:17:40 2020
 
 import numpy as np
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
+def sample_spherical(npoints, ndim=3):
+    vec = np.random.randn(ndim, npoints)
+    vec /= np.linalg.norm(vec, axis=0)
+    
+    return vec
 
 nsteps = 10
-#starting x and y pos
+
+lmda = 6 #mean free path
 
 
-
-x = np.array([1])
-y = np.array([1])
-x[0] = 0
-y[0] = 0
-
-
-for i in range(nsteps):
-    theta = 2* np.pi*np.random.uniform(0, 1, size=1)
-    r = 1
+#initialise x and y
+x = np.array([])
+y = np.array([])
+z = np.array([])
     
-    dx = r*np.cos(theta)
-    dy = r*np.sin(theta)
-    
-    x = np.append(x, x[i] + dx)
-    y = np.append(y, y[i] + dy)
-    
+x, y, z = sample_spherical(nsteps)
+r = -np.log(np.random.uniform(0, 1, size=nsteps))
+x *= r
+y *= r
+z *= r
 
 
-plt.figure()
-plt.plot(x, y)
+fig = plt.figure()
+plt.title("randssp")
+ax = fig.add_subplot(111, projection='3d')
+ax.plot(x, y, z)
 plt.show()
