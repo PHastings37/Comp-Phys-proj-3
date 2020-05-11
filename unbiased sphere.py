@@ -15,8 +15,9 @@ def sample_spherical(npoints, ndim=3):
     
     return vec
 
-xi, yi, zi = sample_spherical(5000)
-r = -np.log(np.random.uniform(0, 1, size=5000))
+xi, yi, zi = sample_spherical(1000)
+r = -np.log(np.random.uniform(0, 1, size=1000))
+#r = 1
 xi *= r
 yi *= r
 zi *= r
