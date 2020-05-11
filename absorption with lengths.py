@@ -105,98 +105,220 @@ def random_walk(finished, abs_check):
             
      return(result)
 
-nneutrons = 10000
+nneutrons = 1000
 
-x = np.array([0])
-y = np.array([0])
-z = np.array([0])
 
-transmitted = 0
-absorbed = 0
-reflected = 0
 lmda = 0
 abs_check = 0
-
-
-
-abs_overall = np.array([])
-ref_overall = np.array([])
-trans_overall = np.array([])
-
-abs_overall_err = np.array([])
-ref_overall_err = np.array([])
-trans_overall_err = np.array([])
-
 length = 0
+ref_percent = np.array([])
+abs_percent = np.array([])
+trans_percent = np.array([])
+abs_tot = np.array([])
+ref_tot = np.array([])
+trans_tot = np.array([])
 
-for k in range(5):
+print('water')
+
+for k in range(30):
     length += 0.01
     lmda, abs_check = water()
     abs_total = np.array([])
     ref_total = np.array([])
     trans_total = np.array([])
-    for j in range(5):
-        #length += 0.1   
-             
-        transmitted = 0
-        absorbed = 0
-        reflected = 0
-        
-        for i in range(nneutrons):
+    
+    transmitted = 0
+    absorbed = 0
+    reflected = 0
+    
+    for i in range(nneutrons):
             
-            result = random_walk(0, abs_check)
-            if result == 0:
-                absorbed += 1
-            elif result == 1:
-                transmitted += 1
-            else:
-                reflected += 1
-                      
-            
-           
-            #ax.plot(x, y, z)
-        abs_total = np.append(abs_total, absorbed)
-        ref_total = np.append(ref_total, reflected)
-        trans_total = np.append(trans_total, transmitted)
+        result = random_walk(0, abs_check)
+        if result == 0:
+            absorbed += 1
+        elif result == 1:
+            transmitted += 1
+        else:
+            reflected += 1                           
     
-    abs_mean = np.sum(abs_total)/len(abs_total)
-    ref_mean = np.sum(ref_total)/len(ref_total)
-    trans_mean = np.sum(trans_total)/len(trans_total)
+    ref_percent = np.append(ref_percent, (reflected/nneutrons))
+    abs_percent = np.append(abs_percent, (absorbed/nneutrons))
+    trans_percent = np.append(trans_percent, (transmitted/nneutrons))
     
-    abs_std = np.std(abs_total)
-    trans_std = np.std(trans_total)
-    ref_std = np.std(ref_total)
+    ref_tot = np.append(ref_tot, reflected)
+    abs_tot = np.append(abs_tot, absorbed)
+    trans_tot = np.append(trans_tot, transmitted)
     
-    ref_overall = np.append(ref_overall, ref_mean)
-    abs_overall = np.append(abs_overall, abs_mean)
-    trans_overall = np.append(trans_overall, trans_mean)
+    ref_err = np.sqrt(nneutrons * ref_percent * (1 - ref_percent))
+    abs_err = np.sqrt(nneutrons * abs_percent * (1 - abs_percent))
+    trans_err = np.sqrt(nneutrons * trans_percent * (1 - trans_percent))
     
-    ref_overall_err = np.append(ref_overall_err, ref_std)
-    abs_overall_err = np.append(abs_overall_err, abs_std)
-    trans_overall_err = np.append(trans_overall_err, trans_std)
-    
-    print(k)
-    
-    print("percent reflected" , (ref_mean / nneutrons) * 100 , " +- " , (ref_std / nneutrons) * 100)
-    print("percent transmitted" , (trans_mean / nneutrons) * 100, " +- " , (trans_std / nneutrons) * 100)
-    print("percent absorbed" , (abs_mean / nneutrons) * 100 , " +- " , (abs_std / nneutrons) * 100)
+    #print("percent reflected" , ref_percent , " +- " , ref_err)
+    #print("percent transmitted" , abs_percent, " +- " , abs_err)
+    #print("percent absorbed" , trans_percent, " +- " , trans_err)
     
     
-length_array = np.linspace(0.01, 0.05, 5)
-    
+length_array = np.linspace(0.01, 0.3, 30)
+
 fig = plt.figure()
-plt.scatter(length_array, abs_overall / 100, color='b', label='abs')
-plt.scatter(length_array, trans_overall / 100, color='g', label='trans')
-plt.errorbar(length_array, abs_overall / 100, yerr=abs_overall_err /100 , color='b', linestyle='None')
-plt.errorbar(length_array, trans_overall / 100, yerr=trans_overall_err /100 , color='g', linestyle='None')
+plt.title('water')
+plt.scatter(length_array, abs_tot, color='b', label='abs')
+plt.scatter(length_array, trans_tot, color='g', label='trans')
+plt.errorbar(length_array, abs_tot, yerr=abs_err, color='b', linestyle='None')
+plt.errorbar(length_array, trans_tot, yerr=trans_err , color='g', linestyle='None')
+plt.legend()
+plt.show()   
+
+fig = plt.figure()
+plt.title('water')
+plt.scatter(length_array, ref_tot, color='r', label='ref')
+plt.errorbar(length_array, ref_tot, yerr=ref_err , color='r', linestyle='None')
+plt.legend()
+plt.show()  
+
+
+
+
+ 
+lmda = 0
+abs_check = 0
+length = 0
+
+ref_percent = np.array([])
+abs_percent = np.array([])
+trans_percent = np.array([])
+abs_tot = np.array([])
+ref_tot = np.array([])
+trans_tot = np.array([])
+
+print('lead')
+
+for k in range(30):
+    length += 0.01
+    lmda, abs_check = lead()
+    abs_total = np.array([])
+    ref_total = np.array([])
+    trans_total = np.array([])
+    
+    transmitted = 0
+    absorbed = 0
+    reflected = 0
+    
+    for i in range(nneutrons):
+            
+        result = random_walk(0, abs_check)
+        if result == 0:
+            absorbed += 1
+        elif result == 1:
+            transmitted += 1
+        else:
+            reflected += 1                           
+    
+    ref_percent = np.append(ref_percent, (reflected/nneutrons))
+    abs_percent = np.append(abs_percent, (absorbed/nneutrons))
+    trans_percent = np.append(trans_percent, (transmitted/nneutrons))
+    
+    ref_tot = np.append(ref_tot, reflected)
+    abs_tot = np.append(abs_tot, absorbed)
+    trans_tot = np.append(trans_tot, transmitted)
+    
+    ref_err = np.sqrt(nneutrons * ref_percent * (1 - ref_percent))
+    abs_err = np.sqrt(nneutrons * abs_percent * (1 - abs_percent))
+    trans_err = np.sqrt(nneutrons * trans_percent * (1 - trans_percent))
+    
+    #print("percent reflected" , ref_percent , " +- " , ref_err)
+    #print("percent transmitted" , abs_percent, " +- " , abs_err)
+    #print("percent absorbed" , trans_percent, " +- " , trans_err)
+    
+    
+length_array = np.linspace(0.01, 0.3, 30)
+
+fig = plt.figure()
+plt.title('lead')
+plt.scatter(length_array, abs_tot, color='b', label='abs')
+plt.scatter(length_array, trans_tot, color='g', label='trans')
+plt.errorbar(length_array, abs_tot, yerr=abs_err, color='b', linestyle='None')
+plt.errorbar(length_array, trans_tot, yerr=trans_err , color='g', linestyle='None')
+plt.legend()
+plt.show()   
+
+fig = plt.figure()
+plt.title('lead')
+plt.scatter(length_array, ref_tot, color='r', label='ref')
+plt.errorbar(length_array, ref_tot, yerr=ref_err , color='r', linestyle='None')
 plt.legend()
 plt.show()   
 
 
+
+
+
+
+lmda = 0
+abs_check = 0
+length = 0
+
+ref_percent = np.array([])
+abs_percent = np.array([])
+trans_percent = np.array([])
+abs_tot = np.array([])
+ref_tot = np.array([])
+trans_tot = np.array([])
+
+print('graphite')
+
+for k in range(30):
+    length += 0.01
+    lmda, abs_check = water()
+    abs_total = np.array([])
+    ref_total = np.array([])
+    trans_total = np.array([])
+    
+    transmitted = 0
+    absorbed = 0
+    reflected = 0
+    
+    for i in range(nneutrons):
+            
+        result = random_walk(0, abs_check)
+        if result == 0:
+            absorbed += 1
+        elif result == 1:
+            transmitted += 1
+        else:
+            reflected += 1                           
+    
+    ref_percent = np.append(ref_percent, (reflected/nneutrons))
+    abs_percent = np.append(abs_percent, (absorbed/nneutrons))
+    trans_percent = np.append(trans_percent, (transmitted/nneutrons))
+    
+    ref_tot = np.append(ref_tot, reflected)
+    abs_tot = np.append(abs_tot, absorbed)
+    trans_tot = np.append(trans_tot, transmitted)
+    
+    ref_err = np.sqrt(nneutrons * ref_percent * (1 - ref_percent))
+    abs_err = np.sqrt(nneutrons * abs_percent * (1 - abs_percent))
+    trans_err = np.sqrt(nneutrons * trans_percent * (1 - trans_percent))
+    
+    #print("percent reflected" , ref_percent , " +- " , ref_err)
+    #print("percent transmitted" , abs_percent, " +- " , abs_err)
+    #print("percent absorbed" , trans_percent, " +- " , trans_err)
+    
+    
+length_array = np.linspace(0.01, 0.3, 30)
+
 fig = plt.figure()
-plt.scatter(length_array, ref_overall  / 100, color='r', label='ref')
-plt.errorbar(length_array, ref_overall / 100, yerr=ref_overall_err /100 , color='r', linestyle='None')
+plt.title('graphite')
+plt.scatter(length_array, abs_tot, color='b', label='abs')
+plt.scatter(length_array, trans_tot, color='g', label='trans')
+plt.errorbar(length_array, abs_tot, yerr=abs_err, color='b', linestyle='None')
+plt.errorbar(length_array, trans_tot, yerr=trans_err , color='g', linestyle='None')
 plt.legend()
 plt.show()   
-    
 
+fig = plt.figure()
+plt.title('graphite')
+plt.scatter(length_array, ref_tot, color='r', label='ref')
+plt.errorbar(length_array, ref_tot, yerr=ref_err , color='r', linestyle='None')
+plt.legend()
+plt.show()   
