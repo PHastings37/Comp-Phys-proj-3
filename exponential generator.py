@@ -22,8 +22,6 @@ plt.show()
 [n, xs] = np.histogram(y, num_bins)
 xs = xs[:-1]
 
-
-
 ni = np.array([])
 xi = np.array([])
 
@@ -32,9 +30,9 @@ for i in range(len(n)):
         ni = np.append(ni, n[i])
         xi = np.append(xi, xs[i])
 
-err_n = np.sqrt(len(ni) * (1 - len(ni)/len(x))) / len(ni)
-err_logn = err_n * np.log(ni)
-fit = np.polyfit(xi, np.log(ni), deg=1, w=err_logn, cov=False)
+err_n = np.sqrt(ni * (1 - ni/len(x)))
+err_logn = err_n / ni
+fit = np.polyfit(xi, np.log(ni), deg=1, w=1/err_logn, cov=False)
 
 plt.figure()
 plt.errorbar(xi, np.log(ni), yerr=err_logn, linestyle='None')

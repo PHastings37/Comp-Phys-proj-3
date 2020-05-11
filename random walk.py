@@ -15,7 +15,7 @@ def sample_spherical(npoints, ndim=3):
     
     return vec
 
-nsteps = 10
+nsteps = 1000
 
 lmda = 6 #mean free path
 
@@ -35,5 +35,8 @@ z *= r
 fig = plt.figure()
 plt.title("randssp")
 ax = fig.add_subplot(111, projection='3d')
+ax.set_xlabel('x')
+ax.set_ylabel('y')
+ax.set_zlabel('z')
 ax.plot(x, y, z)
 plt.show()
