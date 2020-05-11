@@ -31,7 +31,7 @@ for i in range(len(n)):
         xi = np.append(xi, xs[i])
 
 err_n = np.sqrt(ni * (1 - ni/len(x)))
-err_logn = err_n / ni
+err_logn = (err_n / ni)
 fit = np.polyfit(xi, np.log(ni), deg=1, w=1/err_logn, cov=False)
 
 plt.figure()
