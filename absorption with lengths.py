@@ -105,7 +105,7 @@ def random_walk(finished, abs_check):
             
      return(result)
 
-nneutrons = 1000
+nneutrons = 100000
 
 for i in range(3):
     
@@ -246,7 +246,7 @@ for i in range(3):
     plt.show() 
     
     fit = np.polyfit(tran_len, trans_log, deg=1, w=1/trans_log_err, cov=False)
-   # print(-1/fit[0])
+    print(-1/fit[0])
     
     
     
