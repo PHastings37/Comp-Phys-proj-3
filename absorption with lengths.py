@@ -105,9 +105,9 @@ def random_walk(finished, abs_check):
             
      return(result)
 
-nneutrons = 100000
+nneutrons = 1000
 
-for i in range(3):
+for i in range(1):
     
     lmda = 0
     abs_check = 0
@@ -120,11 +120,7 @@ for i in range(3):
     trans_tot = np.array([])
     transi_tot = np.array([])
     transi_err = np.array([])
-    absi_tot = np.array([])
-    absi_err = np.array([])
-    refi_tot = np.array([])
-    refi_err = np.array([])
-    
+
     
     if i == 0:
         lmda, abs_check, material = water()
@@ -166,35 +162,26 @@ for i in range(3):
         trans_err = np.sqrt(nneutrons * trans_percent * (1 - trans_percent))
         length_array = np.linspace(0.01, 0.3, 30)
         tran_len = np.array([])
-        abs_len = np.array([])
-        ref_len = np.array([])
+        trans_log_err = np.array([])
+        
         
         
     for i in range(len(trans_tot)):
        if trans_tot[i] != 0:
            transi_tot = np.append(transi_tot, trans_tot[i])
-           transi_err = np.append(transi_err, trans_err[i]) 
-           tran_len = np.append(tran_len, length_array[i])
+           tran_len = np.append(tran_len, length_array[i]) 
+           transi_err = np.append(transi_err, trans_err[i])
            
-    for i in range(len(abs_tot)):
-       if abs_tot[i] != 0:
-           absi_tot = np.append(absi_tot, abs_tot[i])
-           absi_err = np.append(absi_err, abs_err[i]) 
-           abs_len = np.append(abs_len, length_array[i])
            
-    for i in range(len(ref_tot)):
-       if ref_tot[i] != 0:
-           refi_tot = np.append(refi_tot, ref_tot[i])
-           refi_err = np.append(refi_err, ref_err[i]) 
-           ref_len = np.append(ref_len, length_array[i])
-    
-    ref_log = np.log(refi_tot)
-    abs_log = np.log(absi_tot)
+           
+   
     trans_log = np.log(transi_tot)
-    
-    ref_log_err = (refi_err/refi_tot) * ref_log
-    abs_log_err = (absi_err/absi_tot) * abs_log
-    trans_log_err = (transi_err/transi_tot) * trans_log
+    for i in range(len(transi_tot)):#
+        if transi_tot[i] == 1:
+            trans_log_err = np.append(trans_log_err, transi_err[i])
+            #look at y = ln(x) for cas x =1
+        else:
+            trans_log_err = np.append(trans_log_err, (transi_err[i]/transi_tot[i]) * trans_log[i])
     
     #print("percent reflected" , ref_percent , " +- " , ref_err)
     #print("percent transmitted" , abs_percent, " +- " , abs_err)
@@ -221,32 +208,23 @@ for i in range(3):
     plt.legend()
     plt.show()
     
+    fit, cov = np.polyfit(tran_len, trans_log, deg=1, w=1/trans_log_err, cov=True)
+    err_grad = np.sqrt(1/cov[0,0])
+    
+    print("Attenuation length for ",material,"is",-1/fit[0],"+-",err_grad)
     
     
-    
-    fig = plt.figure()
-    plt.title("log")
-    plt.scatter(abs_len, abs_log, color='b', label='abs')
-    plt.errorbar(abs_len, abs_log, yerr=abs_log_err, color='b', linestyle='None')
-    plt.legend()
-    plt.show()   
-    
+    xt = np.linspace(0.01, 0.3, 30)
     fig = plt.figure()
     plt.title(material)
     plt.scatter(tran_len, trans_log, color='g', label='trans')
+    plt.plot(xt, fit[0] * xt + fit[1])
     plt.errorbar(tran_len, trans_log, yerr=trans_log_err, color='g', linestyle='None')
     plt.legend()
     plt.show() 
     
-    fig = plt.figure()
-    plt.title(material)
-    plt.scatter(ref_len, ref_log, color='r', label='ref')
-    plt.errorbar(ref_len, ref_log, yerr=ref_log_err, color='r', linestyle='None')
-    plt.legend()
-    plt.show() 
     
-    fit = np.polyfit(tran_len, trans_log, deg=1, w=1/trans_log_err, cov=False)
-    print(-1/fit[0])
+   
     
     
     
