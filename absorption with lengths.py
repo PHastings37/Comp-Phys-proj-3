@@ -105,9 +105,9 @@ def random_walk(finished, abs_check):
             
      return(result)
 
-nneutrons = 1000
+nneutrons = 15000
 
-for i in range(1):
+for i in range(3):
     
     lmda = 0
     abs_check = 0
@@ -209,9 +209,12 @@ for i in range(1):
     plt.show()
     
     fit, cov = np.polyfit(tran_len, trans_log, deg=1, w=1/trans_log_err, cov=True)
-    err_grad = np.sqrt(1/cov[0,0])
+    blank1, residuals, blank2, blank3, blank4 = np.polyfit(tran_len, trans_log, deg=1, full=True, w=1/trans_log_err)
+    err_grad = np.sqrt(cov[0,0])
+    err_atten = np.absolute((-1/(fit[0])**2 ))* err_grad
     
-    print("Attenuation length for ",material,"is",-1/fit[0],"+-",err_grad)
+    print("Attenuation length for ",material,"is",-1/fit[0],"+-",err_atten)
+    print("reduced chi-square is 2",residuals/len(tran_len - 2))
     
     
     xt = np.linspace(0.01, 0.3, 30)
