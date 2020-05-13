@@ -3,6 +3,8 @@
 Created on Sun May 10 13:07:35 2020
 
 @author: Patrick
+
+generates and plots a random walk according to the unbiased distibution
 """
 
 import numpy as np
@@ -11,6 +13,9 @@ from mpl_toolkits.mplot3d import Axes3D
 import scipy.constants as sp
 
 def random_direction(npoints, ndim=3):
+    """
+    as seen in prev section
+    """
     vec = np.random.randn(ndim, npoints)
     vec /= np.linalg.norm(vec, axis=0)
     
@@ -60,7 +65,7 @@ def graphite():
     abs_check = Sig_a / (Sig_a + Sig_s)
     return(lmda, abs_check)
     
-nneutrons = 10000
+nneutrons = 100000
 
 
 x = np.array([0])
@@ -73,7 +78,7 @@ abs_total = np.array([])
 ref_total = np.array([])
 trans_total = np.array([])
 
-length = 0.1
+length = 0.2
 lmda, abs_check = water()
 
 for j in range(1):
@@ -86,6 +91,7 @@ for j in range(1):
     ax.set_ylabel('y')
     ax.set_zlabel('z')
     """
+    
     transmitted = 0
     absorbed = 0
     reflected = 0
@@ -141,15 +147,18 @@ abs_mean = np.sum(abs_total)/len(abs_total)
 ref_mean = np.sum(ref_total)/len(ref_total)
 trans_mean = np.sum(trans_total)/len(trans_total)
 
+abs_percent = (abs_total / nneutrons) * 100
+ref_percent = (ref_mean / nneutrons) * 100
+trans_percent = (trans_mean / nneutrons) * 100
 
-abs_std = np.std(abs_total)
-trans_std = np.std(trans_total)
-ref_std = np.std(ref_total)
+abs_err = np.sqrt(nneutrons * abs_percent * (1 - abs_percent))
+ref_err = np.sqrt(nneutrons * ref_percent * (1 - ref_percent))
+trans_err = np.sqrt(nneutrons * trans_percent* (1 - trans_percent))
 
-print("percent reflected" , (ref_mean / nneutrons) * 100 , " +- " , (ref_std / nneutrons) * 100)
-print("percent transmitted" , (trans_mean / nneutrons) * 100, " +- " , (trans_std / nneutrons) * 100)
-print("percent absorbed" , (abs_mean / nneutrons) * 100 , " +- " , (abs_std / nneutrons) * 100)
+print("percent reflected" , ref_percent , " +- " , ref_err)
+print("percent transmitted" ,trans_percent, " +- " , trans_err)
+print("percent absorbed" ,abs_percent, " +- " ,abs_err)
 
-
+#ax.scatter(0, 0, 0, color='g')
 #plt.show()
     

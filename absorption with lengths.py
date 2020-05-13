@@ -3,12 +3,8 @@
 Created on Mon May 11 19:34:13 2020
 
 @author: Patrick
-"""
 
-"""
-Created on Sun May 10 13:07:35 2020
-
-@author: Patrick
+Calculating transmission percentage of different materails
 """
 
 import numpy as np
@@ -104,23 +100,28 @@ def random_walk(finished, abs_check):
             
             
      return(result)
+length = 0.01
+nneutrons = 1000
+err_tot = np.array([])
 
-nneutrons = 15000
 
-for i in range(3):
-    
+for i in range(1):
+    #nneutrons = 0
     lmda = 0
     abs_check = 0
-    length = 0
     ref_percent = np.array([])
     abs_percent = np.array([])
     trans_percent = np.array([])
+    #ref_percent = 0
+    #abs_percent = 0
+    #trans_percent = 0
     abs_tot = np.array([])
     ref_tot = np.array([])
     trans_tot = np.array([])
     transi_tot = np.array([])
     transi_err = np.array([])
-
+    #err_tot = np.array([])
+    lmda, abs_check, material = water()
     
     if i == 0:
         lmda, abs_check, material = water()
@@ -129,8 +130,10 @@ for i in range(3):
     else:
         lmda, abs_check, material = graphite()
     print(material)
-    for k in range(30):
+    
+    for k in range(10):
         length += 0.01
+        #nneutrons +=1000
         abs_total = np.array([])
         ref_total = np.array([])
         trans_total = np.array([])
@@ -147,7 +150,13 @@ for i in range(3):
             elif result == 1:
                 transmitted += 1
             else:
-                reflected += 1                           
+                reflected += 1    
+
+        """       
+        trans_percent = transmitted/nneutrons
+        trans_err = (np.sqrt(transmitted * trans_percent * (1 - trans_percent)))/transmitted 
+        err_tot = np.append(err_tot, trans_err )   
+        """
         
         ref_percent = np.append(ref_percent, (reflected/nneutrons))
         abs_percent = np.append(abs_percent, (absorbed/nneutrons))
@@ -160,21 +169,21 @@ for i in range(3):
         ref_err = np.sqrt(nneutrons * ref_percent * (1 - ref_percent))
         abs_err = np.sqrt(nneutrons * abs_percent * (1 - abs_percent))
         trans_err = np.sqrt(nneutrons * trans_percent * (1 - trans_percent))
+        
         length_array = np.linspace(0.01, 0.3, 30)
         tran_len = np.array([])
         trans_log_err = np.array([])
         
         
         
+    
+    
     for i in range(len(trans_tot)):
        if trans_tot[i] != 0:
            transi_tot = np.append(transi_tot, trans_tot[i])
            tran_len = np.append(tran_len, length_array[i]) 
            transi_err = np.append(transi_err, trans_err[i])
            
-           
-           
-   
     trans_log = np.log(transi_tot)
     for i in range(len(transi_tot)):#
         if transi_tot[i] == 1:
@@ -187,6 +196,10 @@ for i in range(3):
     #print("percent transmitted" , abs_percent, " +- " , abs_err)
     #print("percent absorbed" , trans_percent, " +- " , trans_err)
     
+    
+    
+    
+
     fig = plt.figure()
     plt.title("raw")
     plt.scatter(length_array, abs_tot, color='b', label='abs')
@@ -209,15 +222,15 @@ for i in range(3):
     plt.show()
     
     fit, cov = np.polyfit(tran_len, trans_log, deg=1, w=1/trans_log_err, cov=True)
-    blank1, residuals, blank2, blank3, blank4 = np.polyfit(tran_len, trans_log, deg=1, full=True, w=1/trans_log_err)
+    blank1, chi_square_tot, blank2, blank3, blank4 = np.polyfit(tran_len, trans_log, deg=1, full=True, w=1/trans_log_err)
     err_grad = np.sqrt(cov[0,0])
     err_atten = np.absolute((-1/(fit[0])**2 ))* err_grad
     
     print("Attenuation length for ",material,"is",-1/fit[0],"+-",err_atten)
-    print("reduced chi-square is 2",residuals/len(tran_len - 2))
+    print("reduced chi-square is ",chi_square_tot/(len(tran_len) - 2))
     
     
-    xt = np.linspace(0.01, 0.3, 30)
+    xt = np.linspace(0.01, 0.1, 10)
     fig = plt.figure()
     plt.title(material)
     plt.scatter(tran_len, trans_log, color='g', label='trans')
@@ -225,11 +238,17 @@ for i in range(3):
     plt.errorbar(tran_len, trans_log, yerr=trans_log_err, color='g', linestyle='None')
     plt.legend()
     plt.show() 
+
     
+    """
+    nn = np.linspace(1000, 20000, 20)
     
-   
-    
-    
+    fig = plt.figure()
+    plt.scatter(nn, err_tot)
+    plt.xlabel('nn')
+    plt.ylabel('err')
+    plt.show()    
+    """
     
     
  

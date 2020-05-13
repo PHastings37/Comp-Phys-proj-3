@@ -6,8 +6,6 @@ Calculates the attenutation lengths of different materials
 
 import numpy as np
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-import scipy.constants as sp
 
 def random_direction(npoints, ndim=3):
     vec = np.random.randn(ndim, npoints)
@@ -103,7 +101,7 @@ def random_walk(finished, abs_check):
      return(result)
 
 
-nneutrons = 1000
+nneutrons = 10000
 for i in range(1):
     #loops over the 3 materials
     #Initiaises variables for the start of the next loop
@@ -161,6 +159,7 @@ for i in range(1):
         ref_err = np.sqrt(nneutrons * ref_percent * (1 - ref_percent))
         abs_err = np.sqrt(nneutrons * abs_percent * (1 - abs_percent))
         trans_err = np.sqrt(nneutrons * trans_percent * (1 - trans_percent))
+        
         length_array = np.linspace(0.01, 0.3, 30)
         tran_len = np.array([])
         trans_log_err = np.array([])
@@ -171,7 +170,7 @@ for i in range(1):
        if trans_tot[i] != 0:
            transi_tot = np.append(transi_tot, trans_tot[i])
            tran_len = np.append(tran_len, length_array[i]) 
-           transi_err = np.append(transi_err, (trans_err[i]/tran)
+           transi_err = np.append(transi_err, (trans_err[i]/trans_tot[i]))
               
     trans_log = np.log(transi_tot)
     for i in range(len(transi_tot)):#
